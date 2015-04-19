@@ -4,9 +4,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"github.com/codegangsta/martini-contrib/render"
 	"github.com/go-martini/martini"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/martini-contrib/render"
 	"math/rand"
 	"net/http"
 	"time"
@@ -21,6 +21,11 @@ type Coder struct {
 	Shrt, Url string
 }
 
+type Web struct {
+	Banner, Content string
+	Err             error
+}
+
 func init() {
 	var err error
 	db, err = sql.Open("mysql", "shortener:passwd@/short")
@@ -33,30 +38,45 @@ func init() {
 func main() {
 	m := martini.Classic()
 	//Landing page
-	m.Use(render.Renderer(render.Options{
-		Layout:     "index",
-		Extensions: []string{".tmpl", ".html"},
-		Charset:    "UTF-8",
-	}))
 	m.Get("/", func(r render.Render) {
-		r.HTML(200, "", "")
+		m.Use(render.Renderer(render.Options{
+			Layout:     "index",
+			Extensions: []string{".tmpl", ".html"},
+			Charset:    "UTF-8",
+		}))
+		var land Web
+		land.Banner = "Get short URL for"
+		land.Content = ""
+		r.HTML(200, "land", land)
 	})
 	//Create entry for shortened URL
-	m.Post("/", func(r *http.Request) string {
-		short, err := createUrl(r.FormValue("url"))
+	m.Post("/", func(req *http.Request, r render.Render) {
+		short, err := createUrl(req.FormValue("url"))
+		var post Web
 		if err != nil {
-			return "Error shortening URL " + r.FormValue("url") + "\n" + err.Error()
+			post.Banner = "Error :("
+			post.Content = "Something did not work while trying to shorten URL " +
+				req.FormValue("url") + "\n" + err.Error()
+			post.Err = err
+			r.HTML(500, "error", post)
 		}
-		return "Short URL: " + short + " \n"
+		post.Banner = "Your shortened link"
+		post.Content = "http://s.4pr.es/" + short
+		r.HTML(200, "post", post)
 	})
 	//Redirection to original URL
-	m.Get("/:short", func(params martini.Params, w http.ResponseWriter, r *http.Request) string {
+	m.Get("/:short", func(params martini.Params,
+		w http.ResponseWriter,
+		req *http.Request,
+		r render.Render) {
 		redir, err := getUrl(params["short"])
 		if err != nil {
-			return "404 :(\nURL " + params["short"] + " not found\n"
+			var e404 Web
+			e404.Banner = "404"
+			e404.Content = "URL " + params["short"] + " not found"
+			r.HTML(404, "error", e404)
 		}
-		http.Redirect(w, r, redir, 301)
-		return "Redirect OK :D"
+		http.Redirect(w, req, redir, 301)
 	})
 
 	fmt.Println("Shortening URLS on localhost:1337")
