@@ -11,9 +11,10 @@
 <form action="/" method="POST">
   <div class="flex flex-baseline blue border-bottom border-blue">
    <div class="flex-auto px2">
-		<h2>Get short link for</h2>
+		<h2>{{ post | Banner }}</h2>
    </div>
   </div>
+     {{ if post | Content }}
   	<div class="">
 		<input type="text" class="fit" name="url" id="url" />
 		<input type="submit" class="button center" value="Go!" />
