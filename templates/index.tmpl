@@ -8,6 +8,26 @@
   <title>s.4pr.es URL shortener</title>
 </head>
 <body>
+<<<<<<< HEAD
+  	<div class="flex flex-baseline blue border-bottom border-blue">
+   		<div class="flex-auto px2">
+			<h2>{{ .Banner }}</h2>
+   		</div>
+  	</div>
+  	<div class="field-light">
+	{{if .Get}}
+		<form class="sm-col-6" action="/" method="POST">
+			<input type="text" class="block full-width mb1 field-light" name="url" id="url" />
+			<input type="submit" class="button center" value="Go!" />
+		</form> 
+	{{end}}
+	{{if .Content}}
+		<h3>{{ .Content }}</h3>
+	{{end}}
+	{{if .Err}}
+		<h2 class="muted"> {{ .Err }} </h2>
+	{{end}}
+=======
 <form action="/" method="POST">
   <div class="flex flex-baseline blue border-bottom border-blue">
    <div class="flex-auto px2">
@@ -18,7 +38,8 @@
   	<div class="">
 		<input type="text" class="fit" name="url" id="url" />
 		<input type="submit" class="button center" value="Go!" />
+>>>>>>> origin/master
 	</div>
-</form> 
 </body>
 </html>
+
