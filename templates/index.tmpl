@@ -8,7 +8,6 @@
   <title>s.4pr.es URL shortener</title>
 </head>
 <body>
-<<<<<<< HEAD
   	<div class="flex flex-baseline blue border-bottom border-blue">
    		<div class="flex-auto px2">
 			<h2>{{ .Banner }}</h2>
@@ -27,18 +26,6 @@
 	{{if .Err}}
 		<h2 class="muted"> {{ .Err }} </h2>
 	{{end}}
-=======
-<form action="/" method="POST">
-  <div class="flex flex-baseline blue border-bottom border-blue">
-   <div class="flex-auto px2">
-		<h2>{{ post | Banner }}</h2>
-   </div>
-  </div>
-     {{ if post | Content }}
-  	<div class="">
-		<input type="text" class="fit" name="url" id="url" />
-		<input type="submit" class="button center" value="Go!" />
->>>>>>> origin/master
 	</div>
 </body>
 </html>
