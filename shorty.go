@@ -22,6 +22,7 @@ type Coder struct {
 }
 
 type Web struct {
+	Get             bool
 	Banner, Content string
 	Err             error
 }
@@ -38,21 +39,23 @@ func init() {
 func main() {
 	m := martini.Classic()
 	//Landing page
+	m.Use(render.Renderer(render.Options{
+		Layout:     "index",
+		Extensions: []string{".tmpl", ".html"},
+		Charset:    "UTF-8",
+	}))
 	m.Get("/", func(r render.Render) {
-		m.Use(render.Renderer(render.Options{
-			Layout:     "index",
-			Extensions: []string{".tmpl", ".html"},
-			Charset:    "UTF-8",
-		}))
 		var land Web
+		land.Get = true
 		land.Banner = "Get short URL for"
 		land.Content = ""
-		r.HTML(200, "land", land)
+		r.HTML(200, "get", land)
 	})
 	//Create entry for shortened URL
 	m.Post("/", func(req *http.Request, r render.Render) {
 		short, err := createUrl(req.FormValue("url"))
 		var post Web
+		post.Get = false
 		if err != nil {
 			post.Banner = "Error :("
 			post.Content = "Something did not work while trying to shorten URL " +
@@ -72,13 +75,14 @@ func main() {
 		redir, err := getUrl(params["short"])
 		if err != nil {
 			var e404 Web
+			e404.Get = true
+			e404.Err = err
 			e404.Banner = "404"
-			e404.Content = "URL " + params["short"] + " not found"
+			e404.Content = "URL " + params["short"] + " not found!"
 			r.HTML(404, "error", e404)
 		}
 		http.Redirect(w, req, redir, 301)
 	})
-
 	fmt.Println("Shortening URLS on localhost:1337")
 	m.RunOnAddr(":1337")
 }
