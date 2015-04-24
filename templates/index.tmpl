@@ -1,32 +1,55 @@
 <!DOCTYPE html>
 <head>
-  <meta name="keyword" content="s4pres URL shortener short link generator">
+  <meta name="keyword" content="s4pres URL shortener, short link generator">
   <meta name="robot" content="index, follow">
   <meta charset="utf-8">
   <link href='https://fonts.googleapis.com/css?family=Hammersmith+One&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-  <link href="http://d2v52k3cl9vedd.cloudfront.net/basscss/6.0.2/basscss.min.css" rel="stylesheet">
+  <link href='https://d2v52k3cl9vedd.cloudfront.net/basscss/6.0.2/basscss.min.css' rel='stylesheet' type='text/css'>
   <title>s.4pr.es URL shortener</title>
 </head>
 <body>
-  	<div class="flex flex-baseline blue border-bottom border-blue">
-   		<div class="flex-auto px2">
-			<h2>{{ .Banner }}</h2>
-   		</div>
-  	</div>
-  	<div class="field-light">
-	{{if .Get}}
-		<form class="sm-col-6" action="/" method="POST">
-			<input type="text" class="block full-width mb1 field-light" name="url" id="url" />
-			<input type="submit" class="button center" value="Go!" />
-		</form> 
-	{{end}}
-	{{if .Content}}
-		<h3>{{ .Content }}</h3>
-	{{end}}
-	{{if .Err}}
-		<h2 class="muted"> {{ .Err }} </h2>
-	{{end}}
+	<div class="full-width bg-center" style="background-image: url(https://inge.4pr.es/img/Internet.png)">
+	  	<header class="center px2 py2 white">
+	   		<div class="bg-top white">
+  				<h1>s4pres</h1>	
+				{{if .Banner}}
+				<h2 class="center">{{ .Banner }}</h2>
+				{{end}}
+			</div>			
+	   	</header>	
+		<div class="fit center p2">	
+		{{if .Get}}
+			<form action="/" method="POST">
+				<input type="text" class="block full-width field-light" name="url" id="url" />
+				<br/>
+				<input type="submit" class="button h3" value="Go!" />
+			</form> 
+		{{end}}
+		{{if .Content}}
+			<h1 class="text block full-width white">{{ .Content }}</h1>
+			<a href="/" class="button h3">Another</a>	
+		{{end}}
+		</div>
+		{{if .Err}}
+			<h4 class="muted white center">{{ .Err }}</h4>
+		{{end}}
+		</div>	
+	<div id="footer" class="p5 footer navbar-bottom">
+ 		<div class="center">
+			<br />
+  			<a href="https://it.linkedin.com/in/francescogualazzi"><img src="https://inge.4pr.es/img/social-18-linked-in.png"></a>
+  			<a href="https://twitter.com/inge4pres"><img src="https://inge.4pr.es/img/social-32-twitter.png"></a>
+  			<a href="https://plus.google.com/u/0/+FrancescoGualazzi"><img src="https://inge.4pr.es/img/social-3-google-plus.png"></a>
+  			<a href="https://www.facebook.com/francesco.inge"><img src="https://inge.4pr.es/img/social-31-facebook.png"></a>
+  			<a href="https://www.youtube.com/user/inge4pres"><img src="https://inge.4pr.es/img/social-23-youtube.png"></a>
+  			<a href="https://www.soundcloud.com/Fringe"><img src="https://inge.4pr.es/img/social-54-souncloud.png"></a>
+  			<a href="https://github.com/inge4pres"><img src="https://inge.4pr.es/img/social-22-github.png"></a>
+  			<a href="mailto:inge_AT_4pr.es"><img src="https://inge.4pr.es/img/social-40-e-mail.png"></a>
+  			<a href="skype:francesco.gualazzi?call"><img src="https://inge.4pr.es/img/social-39-skype.png"></a>
+  			<p class="center"><small>courtesy of <a href="https://www.digitalocean.com/?refcode=c77f11249790">myself</a>; this website and all of its content are licensed under the <a href="http://www.wtfpl.net/txt/copying/">WTFPL</a> license</p>
+ 		</div>
 	</div>
 </body>
 </html>
+
 
