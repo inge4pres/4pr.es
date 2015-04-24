@@ -30,7 +30,7 @@ type Web struct {
 
 func init() {
 	var err error
-	db, err = sql.Open("mysql", "shortener:passwd@(sviluppo.mtl.it:3306)/short")
+	db, err = sql.Open("mysql", "shortener:passwd@/short")
 	if err != nil {
 		panic(err)
 	}
