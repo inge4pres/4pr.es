@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+var siteurl = "s.4pr.es/"
 var db *sql.DB
 var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 var coder Coder
@@ -29,21 +30,21 @@ type Web struct {
 
 func init() {
 	var err error
-	db, err = sql.Open("mysql", "shortener:passwd@/short")
+	db, err = sql.Open("mysql", "shortener:passwd@(sviluppo.mtl.it:3306)/short")
 	if err != nil {
 		panic(err)
 	}
-	coder.Length = 8
+	coder.Length = 6
 }
 
 func main() {
 	m := martini.Classic()
-	//Landing page
 	m.Use(render.Renderer(render.Options{
 		Layout:     "index",
 		Extensions: []string{".tmpl", ".html"},
 		Charset:    "UTF-8",
 	}))
+	//Landing page
 	m.Get("/", func(r render.Render) {
 		var land Web
 		land.Get = true
@@ -63,25 +64,20 @@ func main() {
 			post.Err = err
 			r.HTML(500, "error", post)
 		}
-		post.Banner = "Your shortened link"
-		post.Content = "http://s.4pr.es/" + short
+		post.Content = siteurl + short
 		r.HTML(200, "post", post)
 	})
 	//Redirection to original URL
-	m.Get("/:short", func(params martini.Params,
-		w http.ResponseWriter,
-		req *http.Request,
-		r render.Render) {
-		redir, err := getUrl(params["short"])
+	m.Get("/:short", func(params martini.Params, w http.ResponseWriter, req *http.Request, r render.Render) {
+		err := getUrl(params["short"], w, req)
 		if err != nil {
 			var e404 Web
-			e404.Get = true
+			e404.Get = false
 			e404.Err = err
-			e404.Banner = "404"
+			e404.Banner = "404 :("
 			e404.Content = "URL " + params["short"] + " not found!"
 			r.HTML(404, "error", e404)
 		}
-		http.Redirect(w, req, redir, 301)
 	})
 	fmt.Println("Shortening URLS on localhost:1337")
 	m.RunOnAddr(":1337")
@@ -90,9 +86,6 @@ func main() {
 func createUrl(input string) (string, error) {
 	coder.Url = input
 	coder.Shrt = Shorten(coder.Length)
-	/*_ = db.QueryRow("SELECT id from ursl where short = $1", coder.Shrt).Scan(&id)
-		fmt.Printf("Short URL %s is alredy gone!", coder.Shrt)
-	} */
 	_, err := db.Exec("INSERT INTO urls VALUES (null, ?, ?, null)", coder.Url, coder.Shrt)
 	if err != nil {
 		return "", err
@@ -100,13 +93,14 @@ func createUrl(input string) (string, error) {
 	return coder.Shrt, nil
 }
 
-func getUrl(short string) (string, error) {
+func getUrl(short string, w http.ResponseWriter, req *http.Request) error {
 	var redir string
 	err := db.QueryRow("SELECT url FROM urls WHERE short = ?", short).Scan(&redir)
 	if err != nil {
-		return "", err
+		return err
 	}
-	return redir, nil
+	http.Redirect(w, req, redir, 301)
+	return nil
 }
 
 func Shorten(c uint) string {
