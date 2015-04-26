@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var siteurl = "s.4pr.es/"
+var siteurl = "4pr.es/"
 var db *sql.DB
 var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 var coder Coder
