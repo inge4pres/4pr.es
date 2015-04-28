@@ -86,11 +86,26 @@ func main() {
 func createUrl(input string) (string, error) {
 	coder.Url = input
 	coder.Shrt = Shorten(coder.Length)
+	for urlPresent(coder.Shrt) {
+		coder.Shrt = Shorten(coder.Length)
+	}
 	_, err := db.Exec("INSERT INTO urls VALUES (null, ?, ?, null)", coder.Url, coder.Shrt)
 	if err != nil {
 		return "", err
 	}
 	return coder.Shrt, nil
+}
+
+func urlPresent(url string) bool {
+	var s sql.NullString
+	db.QueryRow("SELECT short from urls WHERE short = ?", coder.Shrt).Scan(&s)
+	if s.Valid {
+		fmt.Printf("Short URL %s already exists!\n", url)
+		return true
+	} else {
+		fmt.Printf("Short URL %s does not exist, using it\n", url)
+		return false
+	}
 }
 
 func getUrl(short string, w http.ResponseWriter, req *http.Request) error {
