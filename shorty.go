@@ -100,12 +100,9 @@ func urlPresent(url string) bool {
 	var s sql.NullString
 	db.QueryRow("SELECT short from urls WHERE short = ?", coder.Shrt).Scan(&s)
 	if s.Valid {
-		fmt.Printf("Short URL %s already exists!\n", url)
 		return true
-	} else {
-		fmt.Printf("Short URL %s does not exist, using it\n", url)
-		return false
-	}
+	} 
+	return false
 }
 
 func getUrl(short string, w http.ResponseWriter, req *http.Request) error {
