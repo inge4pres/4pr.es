@@ -69,7 +69,7 @@ func main() {
 			post.Err = err
 			r.HTML(500, "error", post)
 		}
-		post.Content = siteurl + short
+		post.Content = post.Proto + "://" + siteurl + short
 		r.HTML(200, "post", post)
 	})
 	//Redirection to original URL
