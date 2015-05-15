@@ -23,14 +23,14 @@ type Coder struct {
 }
 
 type Web struct {
-	Get             bool
-	Banner, Content string
-	Err             error
+	Get                    bool
+	Proto, Banner, Content string
+	Err                    error
 }
 
 func init() {
 	var err error
-	db, err = sql.Open("mysql", "shortener:passwd@/short")
+	db, err = sql.Open("mysql", "shortener:passwd@(sviluppo.mtl.it:3306)/short")
 	if err != nil {
 		panic(err)
 	}
@@ -45,8 +45,9 @@ func main() {
 		Charset:    "UTF-8",
 	}))
 	//Landing page
-	m.Get("/", func(r render.Render) {
+	m.Get("/", func(req *http.Request, r render.Render) {
 		var land Web
+		land.Proto = req.Proto
 		land.Get = true
 		land.Banner = "Get short URL for"
 		land.Content = ""
@@ -56,6 +57,7 @@ func main() {
 	m.Post("/", func(req *http.Request, r render.Render) {
 		short, err := createUrl(req.FormValue("url"))
 		var post Web
+		post.Proto = req.Proto
 		post.Get = false
 		if err != nil {
 			post.Banner = "Error :("
@@ -72,6 +74,7 @@ func main() {
 		err := getUrl(params["short"], w, req)
 		if err != nil {
 			var e404 Web
+			e404.Proto = req.Proto
 			e404.Get = false
 			e404.Err = err
 			e404.Banner = "404 :("
@@ -80,14 +83,15 @@ func main() {
 		}
 	})
 	fmt.Println("Shortening URLS on localhost:1337")
-	m.RunOnAddr(":1337")
+	http.ListenAndServe(":1337", m)
+	http.ListenAndServeTLS(":4337", "/etc/pki/tls/cert.per", "/etc/pki/tls/private/server.key", m)
 }
 
 func createUrl(input string) (string, error) {
 	coder.Url = input
-	coder.Shrt = Shorten(coder.Length)
+	coder.Shrt = shorten(coder.Length)
 	for urlPresent(coder.Shrt) {
-		coder.Shrt = Shorten(coder.Length)
+		coder.Shrt = shorten(coder.Length)
 	}
 	_, err := db.Exec("INSERT INTO urls VALUES (null, ?, ?, null)", coder.Url, coder.Shrt)
 	if err != nil {
@@ -101,7 +105,7 @@ func urlPresent(url string) bool {
 	db.QueryRow("SELECT short from urls WHERE short = ?", coder.Shrt).Scan(&s)
 	if s.Valid {
 		return true
-	} 
+	}
 	return false
 }
 
@@ -115,7 +119,7 @@ func getUrl(short string, w http.ResponseWriter, req *http.Request) error {
 	return nil
 }
 
-func Shorten(c uint) string {
+func shorten(c uint) string {
 	rand.Seed(time.Now().UnixNano())
 	b := make([]rune, c)
 	for i := range b {
