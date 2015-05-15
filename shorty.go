@@ -9,6 +9,7 @@ import (
 	"github.com/martini-contrib/render"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -46,6 +47,11 @@ func main() {
 	}))
 	//Landing page
 	m.Get("/", func(req *http.Request, r render.Render) {
+		s, ex := url.Parse(req.URL.String())
+		if ex != nil {
+			panic(ex)
+		}
+		fmt.Printf("URL SCHEME %s", s.Scheme)
 		var land Web
 		land.Proto = req.URL.Scheme
 		land.Get = true
