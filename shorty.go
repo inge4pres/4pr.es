@@ -30,7 +30,7 @@ type Web struct {
 
 func init() {
 	var err error
-	db, err = sql.Open("mysql", "shortener:passwd@(sviluppo.mtl.it:3306)/short")
+	db, err = sql.Open("mysql", "shortener:passwd@/short")
 	if err != nil {
 		panic(err)
 	}
@@ -82,7 +82,7 @@ func main() {
 			r.HTML(404, "error", e404)
 		}
 	})
-	fmt.Println("Shortening URLS on localhost:1337")
+	fmt.Println("Shortening URLS on localhost:1337 (HTTPS) and localhost:4337 (HTTPS)")
 	http.ListenAndServe(":1337", m)
 	http.ListenAndServeTLS(":4337", "/etc/pki/tls/cert.per", "/etc/pki/tls/private/server.key", m)
 }
