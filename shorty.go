@@ -9,6 +9,7 @@ import (
 	"github.com/martini-contrib/render"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -47,7 +48,8 @@ func main() {
 	//Landing page
 	m.Get("/", func(req *http.Request, r render.Render) {
 		var land Web
-		land.Proto = req.Proto
+		curl, _ := url.ParseRequestURI(req.RequestURI)
+		land.Proto = curl.Scheme
 		land.Get = true
 		land.Banner = "Get short URL for"
 		land.Content = ""
@@ -56,8 +58,9 @@ func main() {
 	//Create entry for shortened URL
 	m.Post("/", func(req *http.Request, r render.Render) {
 		short, err := createUrl(req.FormValue("url"))
+		curl, _ := url.ParseRequestURI(req.RequestURI)
 		var post Web
-		post.Proto = req.Proto
+		post.Proto = curl.Scheme
 		post.Get = false
 		if err != nil {
 			post.Banner = "Error :("
@@ -71,10 +74,11 @@ func main() {
 	})
 	//Redirection to original URL
 	m.Get("/:short", func(params martini.Params, w http.ResponseWriter, req *http.Request, r render.Render) {
+		curl, _ := url.ParseRequestURI(req.RequestURI)
 		err := getUrl(params["short"], w, req)
 		if err != nil {
 			var e404 Web
-			e404.Proto = req.Proto
+			e404.Proto = curl.Scheme
 			e404.Get = false
 			e404.Err = err
 			e404.Banner = "404 :("
