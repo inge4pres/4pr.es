@@ -89,8 +89,9 @@ func main() {
 		}
 	})
 	fmt.Println("Shortening URLS on localhost:1337 (HTTPS) and localhost:4337 (HTTPS)")
-	http.ListenAndServe(":1337", m)
-	http.ListenAndServeTLS(":4337", "/etc/pki/tls/cert.per", "/etc/pki/tls/private/server.key", m)
+	http.Handle("/", m)
+	http.ListenAndServe(":1337")
+	http.ListenAndServeTLS(":4337", "/home/inge/dev/go/src/s4pres/tls/server.crt", "/home/inge/dev/go/src/s4pres/tls/server.key")
 }
 
 func createUrl(input string) (string, error) {
