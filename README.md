@@ -19,4 +19,4 @@ curl --data "url=http://YOURLONGURLHERE/SOME%20CONTEXT/FILE.EXT" http://4pr.es/ 
     go get github.com/go-martini/martini
     go get github.com/martini-contrib/render
     mysql -u root -p < db.sql 
-    go run shorty.go
+    go run shorty.go -p 12345 -d yourdomain.com [-s]
