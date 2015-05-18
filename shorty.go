@@ -3,6 +3,7 @@ package main
 
 import (
 	"database/sql"
+	"flag"
 	"fmt"
 	"github.com/go-martini/martini"
 	_ "github.com/go-sql-driver/mysql"
@@ -13,7 +14,8 @@ import (
 	"time"
 )
 
-var siteurl = "4pr.es/"
+var tls bool
+var port, domain string
 var db *sql.DB
 var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 var coder Coder
@@ -39,6 +41,13 @@ func init() {
 }
 
 func main() {
+
+	flag.BoolVar(&tls, "s", false, "Use TLS if enabled")
+	flag.StringVar(&port, "p", "1337", "Port to listen on")
+	flag.StringVar(&domain, "d", "4pr.es", "Site domain")
+
+	flag.Parse()
+
 	m := martini.Classic()
 	m.Use(render.Renderer(render.Options{
 		Layout:     "index",
@@ -53,7 +62,7 @@ func main() {
 		}
 		fmt.Printf("URL SCHEME %s", s.Scheme)
 		var land Web
-		land.Proto = req.URL.Scheme
+		land.Proto = getProto()
 		land.Get = true
 		land.Banner = "Get short URL for"
 		land.Content = ""
@@ -63,7 +72,7 @@ func main() {
 	m.Post("/", func(req *http.Request, r render.Render) {
 		short, err := createUrl(req.FormValue("url"))
 		var post Web
-		post.Proto = req.URL.Scheme
+		post.Proto = getProto()
 		post.Get = false
 		if err != nil {
 			post.Banner = "Error :("
@@ -72,7 +81,7 @@ func main() {
 			post.Err = err
 			r.HTML(500, "error", post)
 		}
-		post.Content = post.Proto + "://" + siteurl + short
+		post.Content = post.Proto + "://" + domain + "/" + short
 		r.HTML(200, "post", post)
 	})
 	//Redirection to original URL
@@ -80,7 +89,7 @@ func main() {
 		err := getUrl(params["short"], w, req)
 		if err != nil {
 			var e404 Web
-			e404.Proto = req.URL.Scheme
+			e404.Proto = getProto()
 			e404.Get = false
 			e404.Err = err
 			e404.Banner = "404 :("
@@ -88,10 +97,12 @@ func main() {
 			r.HTML(404, "error", e404)
 		}
 	})
-	fmt.Println("Shortening URLS on localhost:1337 (HTTPS) and localhost:4337 (HTTPS)")
-	http.Handle("/", m)
-	http.ListenAndServe(":1337")
-	http.ListenAndServeTLS(":4337", "/home/inge/dev/go/src/s4pres/tls/server.crt", "/home/inge/dev/go/src/s4pres/tls/server.key")
+	fmt.Println("Shortening URLS on " + getProto() + "://" + domain + ":" + port)
+	if tls {
+		http.ListenAndServeTLS(":"+port, "./tls/server.crt", "./tls/server.key", m)
+	} else {
+		http.ListenAndServe(":"+port, m)
+	}
 }
 
 func createUrl(input string) (string, error) {
@@ -133,4 +144,11 @@ func shorten(c uint) string {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
+}
+
+func getProto() string {
+	if tls {
+		return "https"
+	}
+	return "http"
 }
