@@ -133,6 +133,9 @@ func getUrl(short string, w http.ResponseWriter, req *http.Request) error {
 	if err != nil {
 		return err
 	}
+	if url, _ := url.Parse(redir); url.Scheme == "" {
+		redir = "http://" + redir
+	}
 	http.Redirect(w, req, redir, 301)
 	return nil
 }
