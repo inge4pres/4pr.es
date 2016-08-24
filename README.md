@@ -1,6 +1,8 @@
-# __4pr.es__
-[https://travis-ci.org/inge4pres/4pr.es.svg?branch=master]
+# __4pr.es__ 
 ## A URL shortener in Go
+
+[![Build Status](https://travis-ci.org/inge4pres/4pr.es.svg?branch=master)](https://travis-ci.org/inge4pres/4pr.es)
+
 [4pres](https://4pr.es/) is yet another URL shortener, it will give you a short link for a long URL.
 
 It is written in 150 lines of [Go](http://golang.org/), it uses the powerful [go-martini](https://github.com/go-martini) web framework and the beautiful [basscss](http://www.basscss.com/) as CSS style.
