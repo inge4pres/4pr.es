@@ -3,13 +3,13 @@
 
 [![Build Status](https://travis-ci.org/inge4pres/4pr.es.svg?branch=master)](https://travis-ci.org/inge4pres/4pr.es)
 
-[4pres](https://4pr.es/) is yet another URL shortener, it will give you a short link for a long URL.
+[4pres](http://4pr.es/) is yet another URL shortener, it will give you a short link for a long URL.
 
 It is written in 150 lines of [Go](http://golang.org/), it uses the powerful [go-martini](https://github.com/go-martini) web framework and the beautiful [basscss](http://www.basscss.com/) as CSS style.
 
 Short links have no expiration, for now :D, you can get short URL via any browser or other HTTP client.
 
-Visit [4pres](https://4pr.es/) with your web browser
+Visit [4pres](http://4pr.es/) with your web browser
 
   __or__
   
