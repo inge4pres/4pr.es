@@ -1,4 +1,5 @@
 # __4pr.es__
+[https://travis-ci.org/inge4pres/4pr.es.svg?branch=master]
 ## A URL shortener in Go
 [4pres](https://4pr.es/) is yet another URL shortener, it will give you a short link for a long URL.
 
