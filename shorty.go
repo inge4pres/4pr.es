@@ -5,17 +5,19 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	"github.com/go-martini/martini"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/martini-contrib/render"
 	"math/rand"
 	"net/http"
 	"net/url"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/go-martini/martini"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/martini-contrib/render"
 )
 
 var tls bool
-var port, domain string
+var keypath, certpath, port, domain string
 var db *sql.DB
 var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 var coder Coder
@@ -35,16 +37,18 @@ func init() {
 	var err error
 	db, err = sql.Open("mysql", "shortener:passwd@/short")
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 	coder.Length = 6
 }
 
 func main() {
 
-	flag.BoolVar(&tls, "s", false, "Use TLS if enabled")
-	flag.StringVar(&port, "p", "1337", "Port to listen on")
-	flag.StringVar(&domain, "d", "4pr.es", "Site domain")
+	flag.BoolVar(&tls, "s", true, "Use TLS if enabled")
+	flag.StringVar(&port, "port", "1337", "Port to listen on")
+	flag.StringVar(&domain, "domain", "4pr.es", "Site domain")
+	flag.StringVar(&certpath, "cert", "", "TLS certificate path")
+	flag.StringVar(&keypath, "key", "", "TLS key path")
 
 	flag.Parse()
 
@@ -97,11 +101,11 @@ func main() {
 			r.HTML(404, "error", e404)
 		}
 	})
-	fmt.Println("Shortening URLS on " + getProto() + "://" + domain + ":" + port)
+	log.Println("Shortening URLS on " + getProto() + "://" + domain + ":" + port)
 	if tls {
-		http.ListenAndServeTLS(":"+port, "./tls/server.crt", "./tls/server.key", m)
+		log.Fatalln(http.ListenAndServeTLS(":"+port, certpath, keypath, m))
 	} else {
-		http.ListenAndServe(":"+port, m)
+		log.Fatalln(http.ListenAndServe(":"+port, m))
 	}
 }
 

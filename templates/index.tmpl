@@ -1,54 +1,77 @@
 <!DOCTYPE html>
 <head>
-  <meta name="keyword" content="s4pres URL shortener, short link generator">
-  <meta name="robot" content="index, follow">
-  <meta charset="utf-8">
-  <link href='{{.Proto}}://fonts.googleapis.com/css?family=Hammersmith+One&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-  <link href='{{.Proto}}://d2v52k3cl9vedd.cloudfront.net/basscss/6.0.2/basscss.min.css' rel='stylesheet' type='text/css'>
-  <title>4pr.es URL shortener</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>4pr.es URL shortener</title>
+    <meta name="description" content="growing knowledge one post at a time">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="generator" content="Hugo 0.17" />
+    <meta name="robots" content="index,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="4pr.es">
+	<meta property="og:description" content="URL shortener from inge4pres">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://4pr.es/">
+    <link rel="stylesheet" href="https://inge.4pr.es/css/normalize.css">
+    <link rel="stylesheet" href="https://inge.4pr.es/css/highlight.css">
+    <link rel="stylesheet" href="https://inge.4pr.es/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 </head>
 <body>
-	<div class="full-width bg-center" style="background-image: url({{.Proto}}://inge.4pr.es/img/Internet.png)">
-	  	<header class="center px2 py2 white">
-	   		<div class="bg-top white">
-  				<h1>4pr.es</h1>	
+	<div class="full-width bg-center">
+	  	<header class="site-header">
+            <div class="container">
+  				<h1 class="post-title" itemprop="name">4pr.es</h1>	
 				{{if .Banner}}
-				<h2 class="center">{{ .Banner }}</h2>
+				<p>{{ .Banner }}</p>
 				{{end}}
 			</div>			
 	   	</header>	
-		<div class="fit center p2">	
+		<div class="container">	
 		{{if .Get}}
+		  <center>
 			<form action="/" method="POST">
-				<input type="text" class="block full-width field-light" name="url" id="url" />
-				<br/>
-				<input type="submit" class="button h3" value="Go!" />
+				<input type="text" style="text-align: center; width: 50%;" name="url" id="url" />
+				<br />
+				<br />
+				<input type="submit" class="button h2" value="Go!" />
 			</form> 
+		  </center>
 		{{end}}
 		{{if .Content}}
-			<h1 class="text block full-width white">{{ .Content }}</h1>
+			<h3 class="text">{{ .Content }}</h3>
 			<a href="/" class="button h3">Another</a>	
 		{{end}}
 		</div>
 		{{if .Err}}
-			<h4 class="muted white center">{{ .Err }}</h4>
+			<h3 class="center">{{ .Err }}</h3>
 		{{end}}
 		</div>	
-	<div id="footer" class="p5 footer navbar-bottom">
- 		<div class="center">
-			<br />
-  			<a href="{{.Proto}}://it.linkedin.com/in/francescogualazzi"><img src="{{.Proto}}://inge.4pr.es/img/social-18-linked-in.png"></a>
-  			<a href="{{.Proto}}://twitter.com/inge4pres"><img src="{{.Proto}}://inge.4pr.es/img/social-32-twitter.png"></a>
-  			<a href="{{.Proto}}://plus.google.com/u/0/+FrancescoGualazzi"><img src="{{.Proto}}://inge.4pr.es/img/social-3-google-plus.png"></a>
-  			<a href="{{.Proto}}://www.facebook.com/francesco.inge"><img src="{{.Proto}}://inge.4pr.es/img/social-31-facebook.png"></a>
-  			<a href="{{.Proto}}://www.youtube.com/user/inge4pres"><img src="{{.Proto}}://inge.4pr.es/img/social-23-youtube.png"></a>
-  			<a href="{{.Proto}}://www.soundcloud.com/Fringe"><img src="{{.Proto}}://inge.4pr.es/img/social-54-souncloud.png"></a>
-  			<a href="{{.Proto}}://github.com/inge4pres"><img src="{{.Proto}}://inge.4pr.es/img/social-22-github.png"></a>
-  			<a href="mailto:inge_AT_4pr.es"><img src="{{.Proto}}://inge.4pr.es/img/social-40-e-mail.png"></a>
-  			<a href="skype:francesco.gualazzi?call"><img src="{{.Proto}}://inge.4pr.es/img/social-39-skype.png"></a>
-  			<p class="center"><small>courtesy of <a href="{{.Proto}}://www.digitalocean.com/?refcode=c77f11249790">myself</a>; this website and all of its content are licensed under the <a href="http://www.wtfpl.net/txt/copying/">WTFPL</a> license</p>
- 		</div>
-	</div>
+	<footer class="footer">
+    	<div class="container">
+ 			<div class="site-title-wrapper">
+			    <p>Made with love by inge4pres</p>
+	            <a class="button-square" href="https://inge.4pr.es/index.xml"><i class="fa fa-rss"></i></a>
+            	<a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/inge4pres">
+              		<i class="fa fa-twitter"></i>
+	            </a>
+            	<a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/inge4pres">
+        	      	<i class="fa fa-github-alt"></i>
+	            </a>
+            	<a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/4628081/francesco-gualazzi">
+        	      	<i class="fa fa-stack-overflow"></i>
+	            </a>
+            	<a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/francescogualazzi/">
+        	      	<i class="fa fa-linkedin"></i>
+	            </a>
+				<a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="https://plus.google.com/&#43;FrancescoGualazzi">
+        	      	<i class="fa fa-google-plus"></i>
+	            </a>                      
+	        </div>
+		</div>
+	</footer>
 </body>
 </html>
 
