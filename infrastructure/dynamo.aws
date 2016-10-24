@@ -1,0 +1,6 @@
+aws dynamodb create-table --table-name 4pr.es-url \
+	--key-schema AttributeName=url,KeyType=HASH \
+				AttributeName=urlattrs,KeyType=RANGE \
+	--attribute-definitions  AttributeName=url,AttributeType=S \
+				AttributeName=urlattrs,AttributeType=S \
+	--provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
