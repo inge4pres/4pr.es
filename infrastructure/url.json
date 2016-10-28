@@ -1,0 +1,19 @@
+{
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "url",
+            "AttributeType": "S"
+        }
+    ],
+    "TableName": "4pres_url",
+    "KeySchema": [
+        {
+            "AttributeName": "url",
+            "KeyType": "HASH"
+        }
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": 1,
+        "WriteCapacityUnits": 1
+    }
+}

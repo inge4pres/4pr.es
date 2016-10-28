@@ -1,0 +1,11 @@
+{
+	"url" : {
+		"S" : "4pr.es/abcdefg12"
+	},
+	"redirect" : {
+		"S" : "https://google.com/"
+	},
+	"created" : {
+		"S" : "Fri, 28 Oct 2016 08:26:48 +0200"
+	}
+}
