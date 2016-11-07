@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-var longurl = "http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_CreateTable.html"
+var longurl = "https://gist.github.com/inge4pres/597bb9350ff3e9cc43ecb476a10e636b"
 var test = domain + "/" + "abcdefg12"
 
 func TestNewShortUrl(t *testing.T) {

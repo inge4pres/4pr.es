@@ -42,3 +42,15 @@ func SetDomain(d string) {
 func SetDyndbTable(t string) {
 	dyndbtable = t
 }
+
+func GetShortUrlLength() uint {
+	return urllength
+}
+
+func GetDomain() string {
+	return domain
+}
+
+func GetDyndbTable() string {
+	return dyndbtable
+}

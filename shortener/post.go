@@ -1,14 +1,14 @@
 package shortener
 
 import (
-	log "github.com/Sirupsen/logrus"
+	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	db "github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
-func saveShortUrl(url, table string) error {
+func SaveShortUrl(url, table string) error {
 	sess, err := session.NewSessionWithOptions(session.Options{
 		Config: aws.Config{
 			Region: aws.String("eu-central-1"),
@@ -36,8 +36,8 @@ func saveShortUrl(url, table string) error {
 		},
 	})
 	if err != nil {
-		log.Errorf("Dynamo DB write: %v", err)
+		log.Fatalf("Dynamo DB write: %v", err)
 	}
-	log.Debugf("Saved short url %s\nitem %s\n", out.String(), url)
+	log.Printf("Saved short url %s\nitem %s\n", out.String(), url)
 	return err
 }

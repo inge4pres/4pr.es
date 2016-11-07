@@ -1,14 +1,15 @@
 package shortener
 
 import (
-	log "github.com/Sirupsen/logrus"
+	"encoding/json"
+	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	db "github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
-func readShortUrl(surl, tname string) (string, error) {
+func ReadShortUrl(surl, tname string) (string, error) {
 	var ret string
 	sess, err := session.NewSessionWithOptions(session.Options{
 		Config: aws.Config{
@@ -22,7 +23,6 @@ func readShortUrl(surl, tname string) (string, error) {
 	svc := db.New(sess)
 	out, err := svc.GetItem(&db.GetItemInput{
 		ConsistentRead: aws.Bool(false),
-		//		AttributesToGet: []*string{aws.String("url"),aws.String("redirect")},
 		Key: map[string]*db.AttributeValue{
 			"url": &db.AttributeValue{
 				S: aws.String(surl),
@@ -34,6 +34,11 @@ func readShortUrl(surl, tname string) (string, error) {
 		log.Printf("Error getting item on DB for URL %s\n%v", surl, err)
 		return ret, err
 	}
-	ret = out.String()
-	return ret, nil
+
+	str, _ := json.Marshal(&ShortUrl{
+		Redirect: *out.Item["redirect"].S,
+		Created:  *out.Item["created"].S,
+	})
+
+	return string(str), nil
 }

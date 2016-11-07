@@ -6,7 +6,7 @@ import (
 )
 
 func TestReadShortUrl(t *testing.T) {
-	redir, err := readShortUrl(test, dyndbtable)
+	redir, err := ReadShortUrl(test, dyndbtable)
 	if err != nil {
 		t.Error(err)
 		return
