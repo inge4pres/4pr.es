@@ -1,14 +1,29 @@
 package shortener
 
 import (
+	"log"
 	"math/rand"
 	"time"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	db "github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
-var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-var urllength = uint(8)
-var domain = "4pr.es"
-var dyndbtable = "4pres_url"
+var (
+	letters    = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	urllength  = uint(8)
+	domain     = "4pr.es"
+	dyndbtable = "4pres_url"
+	svc        *db.DynamoDB
+	region     = "eu-central-1"
+)
+
+func init() {
+	if err := connect(); err != nil {
+		log.Fatalf("Dynamo DB connection: %v")
+	}
+}
 
 type ShortUrl struct {
 	Redirect string `json:"redirect"`
@@ -43,6 +58,10 @@ func SetDyndbTable(t string) {
 	dyndbtable = t
 }
 
+func SetAwsRegion(region string) {
+	region = region
+}
+
 func GetShortUrlLength() uint {
 	return urllength
 }
@@ -53,4 +72,22 @@ func GetDomain() string {
 
 func GetDyndbTable() string {
 	return dyndbtable
+}
+
+func GetAwsRegion() string {
+	return region
+}
+
+func connect() error {
+	sess, err := session.NewSessionWithOptions(session.Options{
+		Config: aws.Config{
+			Region: aws.String(region),
+		},
+	})
+	if err != nil {
+		log.Fatalf("Failed to create session: %v", err)
+		return err
+	}
+	svc = db.New(sess)
+	return nil
 }

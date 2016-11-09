@@ -12,17 +12,20 @@ var domain = "4pr.es"
 
 func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 	log.Printf("Received event: %s\n", string(evt))
-	var values map[string]interface{}
+	var values map[string]string
 	if err := json.Unmarshal(evt, &values); err != nil {
 		return nil, err
 	}
-	redirect, err := shortener.ReadShortUrl(domain+values["path"].(string), shortener.GetDyndbTable())
+	resp, err := shortener.ReadShortUrl(domain+"/"+values["url"], shortener.GetDyndbTable())
 	if err != nil {
 		return nil, err
 	}
-	//TODO get data from Path in URL, passing it from ctx?
-	// whenusing Proxy Integration with Lambda, "path" is passwd alongside the payload
-	return redirect, nil
+	surl := new(shortener.ShortUrl)
+	err = json.Unmarshal(resp, &surl)
+	if err != nil {
+		return nil, err
+	}
+	return surl.Redirect, nil
 }
 
 func init() {

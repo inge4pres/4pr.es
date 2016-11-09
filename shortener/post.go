@@ -4,23 +4,18 @@ import (
 	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	db "github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
 func SaveShortUrl(url, table string) error {
-	sess, err := session.NewSessionWithOptions(session.Options{
-		Config: aws.Config{
-			Region: aws.String("eu-central-1"),
-		},
-	})
-	if err != nil {
-		log.Fatalf("Failed to create session: %v", err)
-		return err
-	}
-	svc := db.New(sess)
 	obj := NewShortUrl(url)
-	surl := domain + "/" + shorten(urllength)
+	surl := GetDomain() + "/" + shorten(urllength)
+	for c, e := urlExists(surl, GetDyndbTable()); c; {
+		if e != nil {
+			log.Printf("Url exists err: %v\n", e)
+		}
+		surl = GetDomain() + "/" + shorten(urllength)
+	}
 	out, err := svc.PutItem(&db.PutItemInput{
 		TableName: aws.String(table),
 		Item: map[string]*db.AttributeValue{
@@ -40,4 +35,23 @@ func SaveShortUrl(url, table string) error {
 	}
 	log.Printf("Saved short url %s\nitem %s\n", out.String(), url)
 	return err
+}
+
+func urlExists(url, table string) (bool, error) {
+	out, err := svc.Query(&db.QueryInput{
+		TableName: aws.String(table),
+		ExpressionAttributeNames: map[string]*string{
+			"#U": aws.String("url"),
+		},
+		ExpressionAttributeValues: map[string]*db.AttributeValue{
+			":u": &db.AttributeValue{
+				S: aws.String(url),
+			},
+		},
+		KeyConditionExpression: aws.String("#U = :u"),
+	})
+	if len(out.Items) > 0 {
+		return true, err
+	}
+	return false, nil
 }
