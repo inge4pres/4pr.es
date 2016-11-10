@@ -7,7 +7,7 @@ import (
 	db "github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
-func SaveShortUrl(url, table string) error {
+func SaveShortUrl(url, table string) (string, error) {
 	obj := NewShortUrl(url)
 	surl := GetDomain() + "/" + shorten(urllength)
 	for c, e := urlExists(surl, GetDyndbTable()); c; {
@@ -34,7 +34,7 @@ func SaveShortUrl(url, table string) error {
 		log.Fatalf("Dynamo DB write: %v", err)
 	}
 	log.Printf("Saved short url %s\nitem %s\n", out.String(), url)
-	return err
+	return surl, err
 }
 
 func urlExists(url, table string) (bool, error) {

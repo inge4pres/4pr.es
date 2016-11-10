@@ -30,6 +30,11 @@ type ShortUrl struct {
 	Created  string `json:"created"`
 }
 
+type PostResp struct {
+	Err error
+	Url string
+}
+
 func shorten(c uint) string {
 	rand.Seed(time.Now().UnixNano())
 	b := make([]rune, c)

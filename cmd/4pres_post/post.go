@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"html/template"
 	"log"
 
 	"github.com/eawsy/aws-lambda-go/service/lambda/runtime"
@@ -16,12 +18,22 @@ func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 	if err := json.Unmarshal(evt, &values); err != nil {
 		return nil, err
 	}
-	resp, err := shortener.SaveShortUrl(values["longurl"], shortener.GetDyndbTable())
+	surl, err := shortener.SaveShortUrl(values["longurl"], shortener.GetDyndbTable())
 	if err != nil {
 		log.Println("Save Short Url err: ", err)
 		return nil, err
 	}
-	return nil, nil
+	buf := new(bytes.Buffer)
+	resp := template.New("postresp")
+	resp, err := resp.Parse(postresp)
+	if err != nil {
+		return nil, err
+	}
+	pr := &shortener.PostResp{
+		Url: surl,
+	}
+	resp.Execute(buf, pr)
+	return string(buf.Bytes()), nil
 }
 
 func init() {
