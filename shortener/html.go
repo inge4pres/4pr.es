@@ -1,6 +1,6 @@
 package shortener
 
-var postresp = `<!DOCTYPE html>
+var PostHtml = `<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -44,7 +44,8 @@ var postresp = `<!DOCTYPE html>
     
         <header class="post-header">
             <h1 class="post-title" itemprop="name">4pres shortener</h1>
-            <p>there is your short url you can put it in social media posts, or keep it in your brain</p>
+            <p>there is your short url</p>
+			<p>you can put it in social media posts, or keep it in your brain</p>
 			<h2 class="post-title" itemprop="surl">{{ .Url }}</h2>
         </header>
 		</div>

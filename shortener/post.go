@@ -8,6 +8,9 @@ import (
 )
 
 func SaveShortUrl(url, table string) (string, error) {
+	if err := connect(); err != nil {
+		log.Fatalf("Dynamo DB connection: %v")
+	}
 	obj := NewShortUrl(url)
 	surl := GetDomain() + "/" + shorten(urllength)
 	for c, e := urlExists(surl, GetDyndbTable()); c; {

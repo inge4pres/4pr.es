@@ -42,16 +42,22 @@
     
         <header class="post-header">
             <h1 class="post-title" itemprop="name">4pres shortener</h1>
-            <p>get a short URL for a long one - a serverless experiment by <a href="http://inge.4pr.es/">inge4pres</a></p>
+            <p>get a short URL for a long one - a <a href='https://twitter.com/search?src=typd&q=%23serverless'>#serverless</a> experiment by <a href="http://inge.4pr.es/">inge4pres</a></p>
 			
-			<form action="https://yp7utsbmvh.execute-api.eu-central-1.amazonaws.com/4pres_prod/" method="POST">
-				<input type="text" style="text-align: center; width: 100%;" name="url" id="url" />
+			<form id="urlinput" method="GET" onSubmit="postRequest();">
+				<input type="text" style="text-align: center; width: 100%;" name="url" id="urltext" />
 				<br />
 				<br />
-				<input type="submit" class="button h2" value="GO" />
+				<input type="submit" class="button h2" value="GO"/>
 			</form> 
         </header>
 		
 		</div>
 	</body>
+	<script type="text/javascript">
+	    function postRequest() {
+	    	encUri = encodeURIComponent(document.getElementById('urltext').value)
+			document.getElementById('urlinput').action = 'https://yp7utsbmvh.execute-api.eu-central-1.amazonaws.com/4pres_prod/s?url=' + encUri
+		}
+	</script>
 </html>
