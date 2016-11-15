@@ -18,11 +18,13 @@ func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 	}
 	resp, err := shortener.ReadShortUrl(domain+"/"+values["url"], shortener.GetDyndbTable())
 	if err != nil {
+		log.Printf("ReadShortUrl: %v", err)
 		return nil, err
 	}
 	surl := new(shortener.ShortUrl)
-	err = json.Unmarshal(resp, &surl)
+	err = json.Unmarshal(resp, surl)
 	if err != nil {
+		log.Printf("json Unmarshall: %v", err)
 		return nil, err
 	}
 	return surl.Redirect, nil
