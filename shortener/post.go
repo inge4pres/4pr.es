@@ -1,17 +1,25 @@
 package shortener
 
 import (
+	"errors"
 	"log"
+	"net/url"
 
 	"github.com/aws/aws-sdk-go/aws"
 	db "github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
-func SaveShortUrl(url, table string) (string, error) {
+func SaveShortUrl(encurl, table string) (string, error) {
+	var ret string
 	if err := connect(); err != nil {
 		log.Fatalf("Dynamo DB connection: %v")
 	}
-	obj := NewShortUrl(url)
+	decoded, err := url.QueryUnescape(encurl)
+	if err != nil {
+		log.Println("Decode URL err: ", err)
+		return ret, errors.New("HTTP 500 Internal Server Error")
+	}
+	obj := NewShortUrl(decoded)
 	surl := GetDomain() + "/" + shorten(urllength)
 	for c, e := urlExists(surl, GetDyndbTable()); c; {
 		if e != nil {
@@ -35,8 +43,9 @@ func SaveShortUrl(url, table string) (string, error) {
 	})
 	if err != nil {
 		log.Fatalf("Dynamo DB write: %v", err)
+		return ret, errors.New("HTTP 500 Internal Server Error")
 	}
-	log.Printf("Saved short url %s\nitem %s\n", out.String(), url)
+	log.Printf("Saved short url %s\nitem %s\n", out.String(), encurl)
 	return surl, err
 }
 

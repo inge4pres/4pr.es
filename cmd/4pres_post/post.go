@@ -19,12 +19,7 @@ func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 	if err := json.Unmarshal(evt, &values); err != nil {
 		return nil, err
 	}
-	decoded, err := url.QueryUnescape(values["url"])
-	if err != nil {
-		log.Println("Decode URL err: ", err)
-		return nil, err
-	}
-	surl, err := shortener.SaveShortUrl(decoded, shortener.GetDyndbTable())
+	surl, err := shortener.SaveShortUrl(values["url"], shortener.GetDyndbTable())
 	if err != nil {
 		log.Println("Save Short Url err: ", err)
 		return nil, err
