@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"html/template"
 	"log"
-	"net/url"
 
 	"github.com/eawsy/aws-lambda-go/service/lambda/runtime"
 	"github.com/inge4pres/4pr.es/shortener"
