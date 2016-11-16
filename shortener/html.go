@@ -81,7 +81,7 @@ var Html404 = `<!DOCTYPE html>
             <div class="container">
                 <div class="site-title-wrapper">
                     <h1 class="site-title">
-                       <a title="4pres" href="http://4pr.es/">4pres</a>
+                       <a title="4pres" href="https://4pr.es/">4pres</a>
                     </h1>
 					<a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/inge4pres/4pr.es/tree/serverless">
                         <i class="fa fa-github-alt"></i>
@@ -96,7 +96,7 @@ var Html404 = `<!DOCTYPE html>
     
         <header class="post-header">
             <h1 class="post-title" itemprop="name">404 :(</h1>
-            <p>you hit a blackhole bro! sorry... get a short URL <a href="http://4pr.es/">here</a></p>
+            <p>you hit a blackhole bro! sorry... get a short URL <a href="https://4pr.es/">here</a></p>
 			
         </header>
 		

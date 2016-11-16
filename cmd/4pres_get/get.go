@@ -18,7 +18,7 @@ func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 	}
 	resp, err := shortener.ReadShortUrl(domain+"/"+values["url"], shortener.GetDyndbTable())
 	if err != nil {
-		log.Printf("ReadShortUrl: %v", err)
+		log.Printf("ReadShortUrl error: %v", err)
 		return nil, err
 	}
 	surl := new(shortener.ShortUrl)

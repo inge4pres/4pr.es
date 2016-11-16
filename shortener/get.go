@@ -28,7 +28,7 @@ func ReadShortUrl(surl, tname string) ([]byte, error) {
 	}
 	// Prevent empty
 	if len(out.Item) < 1 {
-		return nil, errors.New("Not Found")
+		return nil, errors.New("HTTP 404 Not Found")
 	}
 	return json.Marshal(&ShortUrl{
 		Redirect: *out.Item["redirect"].S,
