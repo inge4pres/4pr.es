@@ -1,13 +1,38 @@
 #!/bin/bash 
-# build and publish on AWS
+# build code and publish on AWS Lambda
+# parameters 
+#   1- build-type: get|post|all
+#   2- godir: pass it with $GOPATH on *nix, with ///c/Users/user.name/go/path on Win+Myngw
 
-case "$1" in {
- "get"
+if [[ $# -ne 2 ]]
+  then
+    echo "Usage: $0 (get|post|all) gopath"
+    exit 1	
+fi
+
+godir=$2
+work=$(dirname $0)
+mkdir -p $work/published
+
+function buildandpublish() {
+	docker run --rm -v $godir:/go -v $godir/src/github.com/inge4pres/4pr.es/cmd/4pres_${1}:/tmp eawsy/aws-lambda-go
+        mv $work/../cmd/4pres_${1}/handler.zip $work/
+        aws lambda update-function-code  --function-name 4pres_lambda_${1}   --zip-file fileb://$work/handler.zip --publish
+        mv $work/handler.zip $work/published/$(date +%s)_4pres_${1}_handler.zip
 }
-#GET
-docker run --rm -v ///c/Users/francesco.gualazzi/Documents/Software/Golang:/go -v ///c/Users/francesco.gualazzi/Documents/Software/Golang/src/github.com/inge4pres/4pr.es/cmd/4pres_get:/tmp eawsy/aws-lambda-go 
-aws lambda update-function-code  --function-name 4pres_lambda_get   --zip-file fileb://handler.zip --publish
 
-#POST
-docker run --rm -v ///c/Users/francesco.gualazzi/Documents/Software/Golang:/go -v ///c/Users/francesco.gualazzi/Documents/Software/Golang/src/github.com/inge4pres/4pr.es/cmd/4pres_post:/tmp eawsy/aws-lambda-go
-aws lambda update-function-code  --function-name 4pres_lambda_post   --zip-file fileb://handler.zip --publish 
+
+case "$1" in 
+ "get")
+   	buildandpublish get
+	;;
+ "post")
+	buildandpublish post
+	;;
+ "all")
+	buildandpublish get
+	buildandpublish post
+	;;
+esac
+
+exit 0
