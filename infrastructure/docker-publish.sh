@@ -29,9 +29,13 @@ case "$1" in
  "post")
 	buildandpublish post
 	;;
+ "delete")
+ 	buildandpublish delete
+	;;
  "all")
 	buildandpublish get
 	buildandpublish post
+	buildandpublish delete
 	;;
 esac
 
