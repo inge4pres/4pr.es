@@ -4,9 +4,11 @@ import (
 	"errors"
 	"log"
 	"net/url"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	db "github.com/aws/aws-sdk-go/service/dynamodb"
+	sb "github.com/google/safebrowsing"
 )
 
 func SaveShortUrl(encurl, table string) (string, error) {
@@ -18,6 +20,9 @@ func SaveShortUrl(encurl, table string) (string, error) {
 	if err != nil {
 		log.Println("Decode URL err: ", err)
 		return ret, errors.New("HTTP 500 Internal Server Error")
+	}
+	if malicious := checkMalicousURL(decoded); malicious != nil {
+		return ret, malicious
 	}
 	obj := NewShortUrl(decoded)
 	surl := GetDomain() + "/" + shorten(urllength)
@@ -66,4 +71,47 @@ func urlExists(url, table string) (bool, error) {
 		return true, err
 	}
 	return false, nil
+}
+
+func checkMalicousURL(url string) error {
+	//TODO (inge4pres) add Safebrowsing API check
+	k := os.Getenv("GOOGLE_SB_KEY")
+	if k == "" {
+		log.Println("No Google API credentials found! Exiting")
+		return errors.New("Cannot authenticate to Safebrowsing API")
+	}
+	conf := &sb.Config{
+		Logger: os.Stdout,
+		ThreatLists: []sb.ThreatDescriptor{
+			sb.ThreatDescriptor{
+				ThreatType:   sb.ThreatType_SocialEngineering,
+				PlatformType: sb.PlatformType_AllPlatforms,
+			},
+			sb.ThreatDescriptor{
+				ThreatType:   sb.ThreatType_PotentiallyHarmfulApplication,
+				PlatformType: sb.PlatformType_AllPlatforms,
+			},
+			sb.ThreatDescriptor{
+				ThreatType:   sb.ThreatType_UnwantedSoftware,
+				PlatformType: sb.PlatformType_AllPlatforms,
+			},
+			sb.ThreatDescriptor{
+				ThreatType:   sb.ThreatType_Malware,
+				PlatformType: sb.PlatformType_AllPlatforms,
+			},
+		},
+	}
+	client, err := sb.NewSafeBrowser(*conf)
+	if err != nil {
+		return err
+	}
+	defer client.Close()
+	threats, err := client.LookupURLs([]string{url})
+	if err != nil {
+		return err
+	}
+	if len(threats) > 0 {
+		return errors.New("HTTP 412 Precondition Failed")
+	}
+	return nil
 }
