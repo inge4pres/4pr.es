@@ -81,25 +81,8 @@ func checkMalicousURL(url string) error {
 		return errors.New("Cannot authenticate to Safebrowsing API")
 	}
 	conf := &sb.Config{
-		Logger: os.Stdout,
-		ThreatLists: []sb.ThreatDescriptor{
-			sb.ThreatDescriptor{
-				ThreatType:   sb.ThreatType_SocialEngineering,
-				PlatformType: sb.PlatformType_AllPlatforms,
-			},
-			sb.ThreatDescriptor{
-				ThreatType:   sb.ThreatType_PotentiallyHarmfulApplication,
-				PlatformType: sb.PlatformType_AllPlatforms,
-			},
-			sb.ThreatDescriptor{
-				ThreatType:   sb.ThreatType_UnwantedSoftware,
-				PlatformType: sb.PlatformType_AllPlatforms,
-			},
-			sb.ThreatDescriptor{
-				ThreatType:   sb.ThreatType_Malware,
-				PlatformType: sb.PlatformType_AllPlatforms,
-			},
-		},
+		APIKey: k,
+		Logger: os.Stderr,
 	}
 	client, err := sb.NewSafeBrowser(*conf)
 	if err != nil {
@@ -110,7 +93,8 @@ func checkMalicousURL(url string) error {
 	if err != nil {
 		return err
 	}
-	if len(threats) > 0 {
+	if len(threats[0]) > 0 {
+		log.Printf("Detected threats for URL %s: %v", url, threats)
 		return errors.New("HTTP 412 Precondition Failed")
 	}
 	return nil
