@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"path/filepath"
 
 	"github.com/aws/aws-sdk-go/aws"
 	db "github.com/aws/aws-sdk-go/service/dynamodb"
@@ -74,13 +75,22 @@ func urlExists(url, table string) (bool, error) {
 }
 
 func checkMalicousURL(url string) error {
-	//TODO (inge4pres) add Safebrowsing API check
+	sbdb := filepath.Join(filepath.Dir("/"), "tmp", "safebrowsing.db")
 	k := os.Getenv("GOOGLE_SB_KEY")
 	if k == "" {
 		log.Println("No Google API credentials found! Exiting")
 		return errors.New("Cannot authenticate to Safebrowsing API")
 	}
+	if _, err := os.Open(sbdb); err != nil {
+		_, err := os.Create(sbdb)
+		if err != nil {
+			return err
+		}
+	}
+
 	conf := &sb.Config{
+		//Lambda offers a 512MB filesystem on /tmp
+		DBPath: sbdb,
 		APIKey: k,
 		Logger: os.Stderr,
 	}
