@@ -1,11 +1,11 @@
-package main
+package get
 
 import (
 	"encoding/json"
 	"log"
 
 	"github.com/eawsy/aws-lambda-go/service/lambda/runtime"
-	"github.com/inge4pres/4pr.es/shortener"
+	"github.com/inge4pres/4pr.es/pkg/shortener"
 )
 
 var domain = "4pr.es"

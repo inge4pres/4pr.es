@@ -1,11 +1,11 @@
-package main
+package delete
 
 import (
 	"encoding/json"
 	"log"
 
 	"github.com/eawsy/aws-lambda-go/service/lambda/runtime"
-	"github.com/inge4pres/4pr.es/shortener"
+	"github.com/inge4pres/4pr.es/pkg/shortener"
 )
 
 func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {

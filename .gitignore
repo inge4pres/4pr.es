@@ -1,3 +1,4 @@
 *.exe
 *.key
 *.crt
+.idea

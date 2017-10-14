@@ -1,4 +1,0 @@
-aws lambda create-function \
-    --function-name 4pres_lambda_get \
-    --runtime python2.7 --handler handler.handle --zip-file fileb://handler.zip \
-    --role arn:aws:iam::295665577671:role/4pres-lambda-dynamo
