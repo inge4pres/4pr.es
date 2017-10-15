@@ -11,7 +11,7 @@ import (
 
 func DeleteShortUrl(encurl, table string) error {
 	if err := connect(); err != nil {
-		log.Fatalf("Dynamo DB connection: %v")
+		log.Fatalf("Dynamo DB connection: %v", err)
 	}
 	decoded, err := url.QueryUnescape(encurl)
 	if err != nil {

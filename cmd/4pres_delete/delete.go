@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/eawsy/aws-lambda-go/service/lambda/runtime"
+	"github.com/eawsy/aws-lambda-go-core/service/lambda/runtime"
 	"github.com/inge4pres/4pr.es/pkg/shortener"
 )
 
-func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
+func Handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 	log.Println("Received event: ", string(evt))
 	var values map[string]string
 	if err := json.Unmarshal(evt, &values); err != nil {
@@ -18,10 +18,6 @@ func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 		return nil, err
 	}
 	return "DELETED", nil
-}
-
-func init() {
-	runtime.HandleFunc(handle)
 }
 
 func main() {}

@@ -21,7 +21,7 @@ var (
 
 func init() {
 	if err := connect(); err != nil {
-		log.Fatalf("Dynamo DB connection: %v")
+		log.Fatalf("Dynamo DB connection: %v", err)
 	}
 }
 
@@ -63,8 +63,8 @@ func SetDyndbTable(t string) {
 	dyndbtable = t
 }
 
-func SetAwsRegion(region string) {
-	region = region
+func SetAwsRegion(r string) {
+	region = r
 }
 
 func GetShortUrlLength() uint {

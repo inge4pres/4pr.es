@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/eawsy/aws-lambda-go/service/lambda/runtime"
+	"github.com/eawsy/aws-lambda-go-core/service/lambda/runtime"
 	"github.com/inge4pres/4pr.es/pkg/shortener"
 )
 
 var domain = "4pr.es"
 
-func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
+func Handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 	log.Printf("Received event: %s\n", string(evt))
 	var values map[string]string
 	if err := json.Unmarshal(evt, &values); err != nil {
@@ -28,10 +28,6 @@ func handle(evt json.RawMessage, ctx *runtime.Context) (interface{}, error) {
 		return nil, err
 	}
 	return surl.Redirect, nil
-}
-
-func init() {
-	runtime.HandleFunc(handle)
 }
 
 func main() {}
